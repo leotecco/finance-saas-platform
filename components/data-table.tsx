@@ -17,7 +17,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import useConfirm from "@/hooks/use-confirm";
+import { useConfirm } from "@/hooks/use-confirm";
 
 import {
   Table,

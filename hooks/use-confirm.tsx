@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-const useConfirm = (
+export const useConfirm = (
   title: string,
   message: string
 ): [() => JSX.Element, () => Promise<unknown>] => {
@@ -54,5 +54,3 @@ const useConfirm = (
 
   return [ConfirmDialog, confirm];
 };
-
-export default useConfirm;
