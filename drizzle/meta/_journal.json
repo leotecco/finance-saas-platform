@@ -15,6 +15,13 @@
       "when": 1716168680780,
       "tag": "0001_needy_prima",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1717071864977,
+      "tag": "0002_lush_mindworm",
+      "breakpoints": true
     }
   ]
 }
