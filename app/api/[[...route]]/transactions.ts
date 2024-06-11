@@ -37,9 +37,11 @@ const app = new Hono()
 
       const startDate = from
         ? parse(from, "yyyy-MM-dd", new Date())
-        : new Date();
+        : subDays(new Date(), 30);
 
-      const endDate = to ? parse(to, "yyyy-MM-dd", new Date()) : new Date();
+      const endDate = to
+        ? parse(to, "yyyy-MM-dd", new Date())
+        : new Date();
 
       const data = await db
         .select({
