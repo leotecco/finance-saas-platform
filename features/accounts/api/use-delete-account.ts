@@ -1,4 +1,4 @@
-import { InferRequestType, InferResponseType } from "hono";
+import { InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -23,7 +23,8 @@ export const useDeleteAccount = (id?: string) => {
       toast.success("Account deleted");
       queryClient.invalidateQueries({ queryKey: ["account", { id }] });
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      // TODO: Invalidate summary and transacations
+      queryClient.invalidateQueries({ queryKey: ["transacations"] });
+      // TODO: Invalidate summary
     },
     onError: () => {
       toast.error("Failed to delete account");

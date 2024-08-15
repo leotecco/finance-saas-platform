@@ -39,9 +39,7 @@ const app = new Hono()
         ? parse(from, "yyyy-MM-dd", new Date())
         : subDays(new Date(), 30);
 
-      const endDate = to
-        ? parse(to, "yyyy-MM-dd", new Date())
-        : new Date();
+      const endDate = to ? parse(to, "yyyy-MM-dd", new Date()) : new Date();
 
       const data = await db
         .select({
@@ -233,7 +231,10 @@ const app = new Hono()
         .update(transactions)
         .set(values)
         .where(
-          inArray(transactions.id, sql`select id from ${transactionsToUpdate}`)
+          inArray(
+            transactions.id,
+            sql`(select id from ${transactionsToUpdate})`
+          )
         )
         .returning();
 
@@ -273,7 +274,10 @@ const app = new Hono()
         .with(transactionsToDelete)
         .delete(transactions)
         .where(
-          inArray(transactions.id, sql`select id from ${transactionsToDelete}`)
+          inArray(
+            transactions.id,
+            sql`(select id from ${transactionsToDelete})`
+          )
         )
         .returning({
           id: transactions.id,
