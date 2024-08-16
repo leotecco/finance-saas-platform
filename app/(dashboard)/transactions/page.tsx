@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { Loader2, Plus } from "lucide-react";
 
 import { DataTable } from "@/components/data-table";
@@ -11,14 +13,51 @@ import { useGetTransactions } from "@/features/transactions/api/use-get-transact
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
 
 import { columns } from "./columns";
+import { UploadButton } from "./upload-button";
+import { ImportCard } from "./import-card";
+
+enum VARIANTS {
+  LIST = "LIST",
+  IMPORT = "IMPORT",
+}
+
+const INITIAL_IMPORT_RESULTS = {
+  date: [],
+  errors: [],
+  meta: {},
+};
 
 const TransactionsPage = () => {
+  const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
+  const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
   const newTransaction = useNewTransaction();
   const transactionsQuery = useGetTransactions();
   const deleteTransactions = useBulkDeleteTransactions();
 
   const transactions = transactionsQuery.data || [];
   const disabled = transactionsQuery.isLoading || deleteTransactions.isPending;
+
+  const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
+    console.log(results);
+
+    setImportResults(results);
+    setVariant(VARIANTS.IMPORT);
+  };
+
+  const onCancelImport = () => {
+    setImportResults(INITIAL_IMPORT_RESULTS);
+    setVariant(VARIANTS.LIST);
+  };
+
+  if (variant === VARIANTS.IMPORT) {
+    return (
+      <ImportCard
+        data={importResults.data}
+        onCancel={onCancelImport}
+        onSubmit={() => {}}
+      />
+    );
+  }
 
   if (transactionsQuery.isLoading) {
     return (
@@ -42,10 +81,13 @@ const TransactionsPage = () => {
           <CardTitle className="text-xl line-clamp-1">
             Transaction History
           </CardTitle>
-          <Button onClick={newTransaction.onOpen} size="sm">
-            <Plus className="size-4 mr-2" />
-            Add new
-          </Button>
+          <div className="flex item-center gap-x-2">
+            <Button onClick={newTransaction.onOpen} size="sm">
+              <Plus className="size-4 mr-2" />
+              Add new
+            </Button>
+            <UploadButton onUpload={onUpload} />
+          </div>
         </CardHeader>
         <CardContent>
           <DataTable
