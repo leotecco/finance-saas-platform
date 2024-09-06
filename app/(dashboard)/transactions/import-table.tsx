@@ -3,29 +3,38 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableFooter,
-  TableRow,
   TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+
+import { TableHeadSelect } from "./table-head-select";
 
 type Props = {
   headers: string[];
   body: string[][];
   selectedColumns: Record<string, string | null>;
-  onTableHeadSelectedChange: (
-    columnIndex: number,
-    value: string | null
-  ) => void;
+  onTableHeadSelectChange: (columnIndex: number, value: string | null) => void;
 };
 
-export const ImportTable = ({ headers, body }: Props) => {
+export const ImportTable = ({
+  headers,
+  body,
+  selectedColumns,
+  onTableHeadSelectChange,
+}: Props) => {
   return (
     <div className="rounded-md border overflow-hidden">
       <Table>
         <TableHeader className="bg-muted">
           <TableRow>
             {headers.map((item, index) => (
-              <TableHead key={index}>{index}</TableHead>
+              <TableHead key={index}>
+                <TableHeadSelect
+                  columnIndex={index}
+                  selectedColumns={selectedColumns}
+                  onChange={onTableHeadSelectChange}
+                />
+              </TableHead>
             ))}
           </TableRow>
         </TableHeader>

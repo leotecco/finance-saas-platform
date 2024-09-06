@@ -1,8 +1,11 @@
 import { useState } from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { format, parse } from "date-fns";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { convertAmountToMiliunits } from "@/lib/utils";
 import { ImportTable } from "./import-table";
 
 const dateFormat = "yyyy-MM-dd HH:mm:ss";
@@ -26,6 +29,75 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
   );
   const [headers, ...body] = data;
 
+  const onTableHeadSelectChange = (
+    columnIndex: number,
+    value: string | null
+  ) => {
+    setSelectedColumns((prev) => {
+      const newSelectedColumns = { ...prev };
+
+      for (const key in newSelectedColumns) {
+        if (newSelectedColumns[key] === value) {
+          newSelectedColumns[key] = null;
+        }
+      }
+
+      if (value === "skip") {
+        value = null;
+      }
+
+      newSelectedColumns[`column_${columnIndex}`] = value;
+
+      return newSelectedColumns;
+    });
+  };
+
+  const progress = Object.values(selectedColumns).filter(Boolean).length;
+
+  const handleContinue = () => {
+    const getColumnIndex = (column: string) => {
+      return column.split("_")[1];
+    };
+
+    const mappedData = {
+      headers: headers.map((_header, index) => {
+        const columnIndex = getColumnIndex(`column_${index}`);
+        return selectedColumns[`column_${columnIndex}`] || null;
+      }),
+      body: body
+        .map((row) => {
+          const transformedRow = row.map((cell, index) => {
+            const columnIndex = getColumnIndex(`column_${index}`);
+            return selectedColumns[`column_${columnIndex}`] ? cell : null;
+          });
+
+          return transformedRow.every((item) => item === null)
+            ? []
+            : transformedRow;
+        })
+        .filter((row) => row.length > 0),
+    };
+
+    const arrayOfData = mappedData.body.map((row) => {
+      return row.reduce((acc: any, cell, index) => {
+        const header = mappedData.headers[index];
+        if (header !== null) {
+          acc[header] = cell;
+        }
+
+        return acc;
+      }, {});
+    });
+
+    const formattedData = arrayOfData.map((item) => ({
+      ...item,
+      amount: convertAmountToMiliunits(parseFloat(item.amount)),
+      date: format(parse(item.date, dateFormat, new Date()), outputFormat),
+    }));
+
+    onSubmit(formattedData);
+  };
+
   return (
     <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
       <Card className="border-none drop-shadow-sm">
@@ -33,9 +105,17 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
           <CardTitle className="text-xl line-clamp-1">
             Import Transaction
           </CardTitle>
-          <div className="flex item-center gap-x-2">
-            <Button onClick={onCancel} size="sm">
+          <div className="flex flex-col lg:flex-row gap-y-2 item-center gap-x-2">
+            <Button className="w-full lg:w-auto" size="sm" onClick={onCancel}>
               Cancel
+            </Button>
+            <Button
+              className="w-full lg:w-auto"
+              size="sm"
+              disabled={progress < requiredOptions.length}
+              onClick={handleContinue}
+            >
+              Continue ({progress} / {requiredOptions.length})
             </Button>
           </div>
         </CardHeader>
@@ -44,7 +124,7 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
             headers={headers}
             body={body}
             selectedColumns={selectedColumns}
-            onTableHeadSelectedChange={() => {}}
+            onTableHeadSelectChange={onTableHeadSelectChange}
           />
         </CardContent>
       </Card>
