@@ -18,6 +18,7 @@ import { useEditTransaction } from "@/features/transactions/api/use-edit-transac
 import { useGetTransaction } from "@/features/transactions/api/use-get-transaction";
 import { useOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
 import { useConfirm } from "@/hooks/use-confirm";
+import { convertAmountFromMiliunits } from "@/lib/utils";
 
 import { TransactionForm } from "./transaction-form";
 
@@ -68,7 +69,9 @@ export const EditTransactionSheet = () => {
     ? {
         accountId: transactionQuery.data.accountId,
         categoryId: transactionQuery.data.categoryId || "",
-        amount: transactionQuery.data.amount.toString(),
+        amount: convertAmountFromMiliunits(
+          transactionQuery.data.amount
+        ).toString(),
         date: transactionQuery.data.date
           ? new Date(transactionQuery.data.date)
           : new Date(),
