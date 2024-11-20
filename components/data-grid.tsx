@@ -1,5 +1,6 @@
 "use client";
 
+import { parse } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { FaPiggyBank } from "react-icons/fa";
 import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
@@ -13,8 +14,12 @@ export const DataGrid = () => {
   const { data, isLoading } = useGetSummary();
 
   const params = useSearchParams();
-  const to = params.get("to") || undefined;
-  const from = params.get("from") || undefined;
+  const toParam = params.get("to");
+  const fromParam = params.get("from");
+  const to = toParam ? parse(toParam, "yyyy-MM-dd", new Date()) : undefined;
+  const from = fromParam
+    ? parse(fromParam, "yyyy-MM-dd", new Date())
+    : undefined;
 
   const dateRangeLabel = formatDateRange({ to, from });
 

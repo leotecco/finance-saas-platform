@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { ChevronDown } from "lucide-react";
-import { format, subDays } from "date-fns";
+import { format, parse, subDays } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { DateRange } from "react-day-picker";
@@ -22,10 +22,6 @@ export const DateFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const [date, setDate] = useState<DateRange | undefined>();
-
-  console.log(date);
-  
 
   const accountId = params.get("accountId");
   const from = params.get("from") || "";
@@ -35,9 +31,11 @@ export const DateFilter = () => {
   const defaultFrom = subDays(defaultTo, 30);
 
   const paramState = {
-    from: from ? new Date(from) : defaultFrom,
-    to: to ? new Date(to) : defaultTo,
+    from: from ? parse(from, "yyyy-MM-dd", new Date()) : defaultFrom,
+    to: to ? parse(to, "yyyy-MM-dd", new Date()) : defaultTo,
   };
+
+  const [date, setDate] = useState<DateRange | undefined>(paramState);
 
   const pushToUrl = (dateRange: DateRange | undefined) => {
     const query = {
@@ -80,7 +78,6 @@ export const DateFilter = () => {
         <Calendar
           mode="range"
           numberOfMonths={2}
-          disabled={false}
           defaultMonth={date?.from}
           selected={date}
           onSelect={setDate}
