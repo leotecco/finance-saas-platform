@@ -1,17 +1,17 @@
-import { parse, subDays } from "date-fns";
-import { z } from "zod";
-import { Hono } from "hono";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { zValidator } from "@hono/zod-validator";
-import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
+import { endOfDay, parse, subDays } from "date-fns";
+import { and, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
+import { Hono } from "hono";
+import { z } from "zod";
 
 import { db } from "@/db/drizzle";
 import {
-  transactions,
-  insertTransactionSchema,
-  categories,
   accounts,
+  categories,
+  insertTransactionSchema,
+  transactions,
 } from "@/db/schema";
 
 const app = new Hono()
@@ -35,11 +35,13 @@ const app = new Hono()
 
       const { accountId, from, to } = c.req.valid("query");
 
-      const startDate = from
-        ? parse(from, "yyyy-MM-dd", new Date())
-        : subDays(new Date(), 30);
+      const startDate = endOfDay(
+        from ? parse(from, "yyyy-MM-dd", new Date()) : subDays(new Date(), 30)
+      );
 
-      const endDate = to ? parse(to, "yyyy-MM-dd", new Date()) : new Date();
+      const endDate = endOfDay(
+        to ? parse(to, "yyyy-MM-dd", new Date()) : new Date()
+      );
 
       const data = await db
         .select({
