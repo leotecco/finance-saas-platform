@@ -1,8 +1,8 @@
 "use client";
 
+import { CharLoading, Chart } from "@/components/chart";
+import { SpendingPie, SpendingPieLoading } from "@/components/spending-pie";
 import { useGetSummary } from "@/features/summary/hooks/use-get-summary";
-import { CharLoading, Chart } from "./chart";
-import { SpendingPie, SpendingPieLoading } from "./spending-pie";
 
 export const DataCharts = () => {
   const { data, isLoading } = useGetSummary();

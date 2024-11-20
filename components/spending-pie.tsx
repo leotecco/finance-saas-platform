@@ -2,18 +2,18 @@ import { useState } from "react";
 
 import { FileSearch, Loader2, PieChart, Radar, TargetIcon } from "lucide-react";
 
-import { PieVariant } from "./pie-variant";
-import { RadarVariant } from "./radar-variant";
-import { RadialVariant } from "./radial-variant";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { PieVariant } from "@/components/pie-variant";
+import { RadarVariant } from "@/components/radar-variant";
+import { RadialVariant } from "@/components/radial-variant";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { Skeleton } from "./ui/skeleton";
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
   data?: {

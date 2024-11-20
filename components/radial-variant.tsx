@@ -1,13 +1,11 @@
-import { formatCurrency } from "@/lib/utils";
 import {
   Legend,
   RadialBar,
   RadialBarChart,
-  ResponsiveContainer,
-  Tooltip,
+  ResponsiveContainer
 } from "recharts";
 
-import { CategoryTooltip } from "./category-tooltip";
+import { formatCurrency } from "@/lib/utils";
 
 const COLORS = ["#0062ff", "#12c6ff", "#ff647f", "#ff9354"];
 

@@ -1,9 +1,10 @@
-import { Loader2 } from "lucide-react";
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
+import { Loader2 } from "lucide-react";
 
 import { HeaderLogo } from "@/components/header-logo";
 import { Navigation } from "@/components/navigation";
 import { WelcomeMessage } from "@/components/welcome-message";
+import { Filters } from "@/components/filters";
 
 export const Header = () => {
   return (
@@ -22,6 +23,7 @@ export const Header = () => {
           </ClerkLoading>
         </div>
         <WelcomeMessage />
+        <Filters />
       </div>
     </header>
   );

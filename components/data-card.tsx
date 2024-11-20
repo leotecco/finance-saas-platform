@@ -2,15 +2,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { type IconType } from "react-icons/lib";
 
 import { cn, formatCurrency, formatPercentage } from "@/lib/utils";
-import { CountUp } from "./count-up";
+import { CountUp } from "@/components/count-up";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Skeleton } from "./ui/skeleton";
+} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const boxVariant = cva("rounded-md p-3", {
   variants: {
@@ -90,7 +90,8 @@ export const DataCard = ({
             percentageChange < 0 && "text-rose-500"
           )}
         >
-          {formatPercentage(percentageChange, { addPrefix: true })} from last period
+          {formatPercentage(percentageChange, { addPrefix: true })} from last
+          period
         </p>
       </CardContent>
     </Card>

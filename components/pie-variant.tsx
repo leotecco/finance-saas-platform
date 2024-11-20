@@ -1,7 +1,7 @@
-import { formatPercentage } from "@/lib/utils";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-import { CategoryTooltip } from "./category-tooltip";
+import { CategoryTooltip } from "@/components/category-tooltip";
+import { formatPercentage } from "@/lib/utils";
 
 const COLORS = ["#0062ff", "#12c6ff", "#ff647f", "#ff9354"];
 

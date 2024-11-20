@@ -1,5 +1,5 @@
 import { formatCurrency } from "@/lib/utils";
-import { Separator } from "./ui/separator";
+import { Separator } from "@/components/ui/separator";
 
 export const CategoryTooltip = ({ active, payload }: any) => {
   if (!active) {
